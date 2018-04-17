@@ -1,0 +1,36 @@
+{
+  "name": "infergraph.js",
+  "version": "1.0.0",
+  "description": "A library for (di)graph creating, analysing, and inference",
+  "main": "build/infergraph.js",
+  "unpkg": "build/infergraph.min.js",
+  "module": "index",
+  "scripts": {
+    "pretest": "(if exist build rd /q /s build) && mkdir build && rollup -c",
+    "test": "tape test/**/*-test.js && eslint index.js src",
+    "build": "uglifyjs -b beautify=false build/infergraph.js -c -m -o build/infergraph.min.js",
+    "prepublishOnly": "npm run pretest && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimeWz667/infergraph.js.git"
+  },
+  "keywords": [
+    "graph",
+    "digraph",
+    "topology"
+  ],
+  "author": "TimeWz667 <TimeWz667@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TimeWz667/infergraph.js/issues"
+  },
+  "homepage": "https://github.com/TimeWz667/infergraph.js#readme",
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "rollup": "^0.57.1",
+    "tape": "^4.9.0",
+    "uglify-js-es6": "^2.8.9"
+  },
+  "dependencies": {}
+}
