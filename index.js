@@ -3,3 +3,4 @@
  */
 
 export {Graph} from "./src/graph";
+export {DiGraph} from "./src/digraph";

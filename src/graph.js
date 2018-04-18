@@ -2,69 +2,12 @@
  * Created by TimeWz667 on 17/04/2018.
  */
 
-import {NodeOp, NodeOpGroup} from "./node";
+import {AbstractGraph} from "./absgraph";
 
 
-export class Graph {
+export class Graph extends AbstractGraph{
     constructor(attr) {
-        this.Nodes = {};
-        this.Predecessor = [];
-        this.Successor = [];
-        this.Attributes = Object.assign({}, attr);
-    }
-
-    addNodes(nodes) {
-        let ng;
-        if (nodes instanceof Array) {
-            ng = nodes.map(nod => this.addNode(nod));
-        } else if (nodes instanceof Object) {
-            ng = Object.entries(nodes).map(nod=> this.addNode(nod));
-        } else {
-            return;
-        }
-
-        return new NodeOpGroup(ng);
-    }
-
-    addNode(node) {
-        let name;
-
-        if (node instanceof Array) {
-            name = node[0];
-
-            if (name in this.Nodes) {
-                node = Object.assign(this.Nodes[name], node[1]);
-            } else {
-                node = Object.assign({id: name}, node[1]);
-            }
-        } else if (typeof(node) === "object") {
-            name = ("id" in node)? node.id: JSON.stringify(node);
-        } else if (typeof(node) === "string") {
-            name = node;
-            node = (name in this.Nodes)? this.Nodes[name]: {id: node};
-        } else {
-            return;
-        }
-
-        if (!(name in this.Nodes)) {
-            this.Predecessor[name] = {};
-            this.Successor[name] = {};
-        }
-
-        this.Nodes[name] = node;
-        return new NodeOp(node);
-    }
-
-    getNode(node) {
-        return new NodeOp(this.Nodes[node]);
-    }
-
-    getNodes(nodes) {
-        if (typeof(nodes) === "function") {
-            return new NodeOpGroup(Object.values(this.Nodes).filter(nodes));
-        } else {
-            return new NodeOpGroup(nodes.map(nod => this.Nodes[nod]));
-        }
+        super(attr);
     }
 
     addEdge(source, target, weight) {
@@ -133,5 +76,9 @@ export class Graph {
     getClusteringCoefficient() {
         const cls = Object.keys(this.Nodes).map(node => this.getLocalClustering(node));
         return cls.reduce((a, b) => a+b, 0)/cls.length;
+    }
+
+    getSubgraph(nodes) {
+        // todo
     }
 }
