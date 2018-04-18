@@ -25,7 +25,11 @@ export class DiGraph extends AbstractGraph {
     }
 
     getParentKeys(node) {
-        return Object.keys(this.Predecessor[node]);
+        try {
+            return Object.keys(this.Predecessor[node]);
+        } catch (e){
+            return [];
+        }
     }
 
     getParents(node) {
@@ -33,11 +37,21 @@ export class DiGraph extends AbstractGraph {
     }
 
     isAncestor(anc, node) {
-        // todo
+        return this.getAncestorKeys(node).includes(anc);
     }
 
     getAncestorKeys(node) {
-        // todo
+        let ans = [], querying = this.getParentKeys(node);
+
+        while(querying.length > 0) {
+            ans = ans.concat(querying);
+            querying = querying.map(d => this.getParentKeys(d))
+                               .reduce((a, b) => a.concat(b), [])
+                .filter((d, i, self) => self.indexOf(d) === i)
+                .filter(d => !ans.includes(d));
+        }
+
+        return ans
     }
 
     getAncestors(node) {
@@ -52,7 +66,11 @@ export class DiGraph extends AbstractGraph {
     }
 
     getChildKeys(node) {
-        return Object.keys(this.Successor[node]);
+        try {
+            return Object.keys(this.Successor[node]);
+        } catch (e) {
+            return [];
+        }
     }
 
     getChildren(node) {
@@ -60,11 +78,21 @@ export class DiGraph extends AbstractGraph {
     }
 
     isDescendant(des, node) {
-        // todo
+        return this.getDescendantKeys(node).includes(des);
     }
 
     getDescendantKeys(node) {
-        // todo
+        let dns = [], querying = this.getParentKeys(node);
+
+        while(querying.length > 0) {
+            dns = dns.concat(querying);
+            querying = querying.map(d => this.getChildKeys(d))
+                .reduce((a, b) => a.concat(b), [])
+                .filter((d, i, self) => self.indexOf(d) === i)
+                .filter(d => !dns.includes(d));
+        }
+
+        return dns
     }
 
     getDescendants(node) {
@@ -72,27 +100,33 @@ export class DiGraph extends AbstractGraph {
     }
 
     getInDegree(node) {
-        // todo
+        return this.getParentKeys(node).length;
     }
 
     getAvgInDegree() {
-        // todo
+        const n = Object.keys(this.Nodes).length;
+        return Object.values(this.Predecessor)
+                .map(nod => Object.keys(nod).length)
+                .reduce((a, b) => a+b, 0)/n;
     }
 
     getOutDegree(node) {
-        // todo
+        return this.getChildKeys(node).length;
     }
 
     getAvgOutDegree() {
-        // todo
+        const n = Object.keys(this.Nodes).length;
+        return Object.values(this.Successor)
+                .map(nod => Object.keys(nod).length)
+                .reduce((a, b) => a+b, 0)/n;
     }
 
     getDegree(node) {
-        // todo
+        return this.getInDegree(node) + this.getOutDegree(node);
     }
 
     getAvgDegree() {
-        // todo
+        return this.getAvgInDegree() + this.getAvgOutDegree();
     }
 
     getLocalClustering(node) {
