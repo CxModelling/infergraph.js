@@ -34,6 +34,10 @@ export class Graph extends AbstractGraph{
                                 .forEach(t => this.addEdge(s, t, weight)));
     }
 
+    getEdgeWeight(source, target) {
+        return this.Predecessor[source][target];
+    }
+
     isNeighbour(source, target) {
         if (source in this.Nodes && target in this.Nodes) {
             return target in this.Predecessor[source];
@@ -41,16 +45,8 @@ export class Graph extends AbstractGraph{
         return false;
     }
 
-    getEdgeWeight(source, target) {
-        return this.Predecessor[source][target];
-    }
-
     getNeighbourKeys(node) {
         return Object.keys(this.Predecessor[node]);
-    }
-
-    getNeighbours(node) {
-        return this.getNodes(this.getNeighbourKeys(node));
     }
 
     getDegree(node) {
@@ -62,7 +58,6 @@ export class Graph extends AbstractGraph{
         return Object.values(this.Predecessor)
                      .map(nod => Object.keys(nod).length)
                      .reduce((a, b) => a+b, 0)/n;
-
     }
 
     getLocalClustering(node) {
@@ -70,15 +65,6 @@ export class Graph extends AbstractGraph{
 
         return nei.map(src => nei.filter(tar => this.isNeighbour(src, tar)).length)
             .reduce((a, b) => a + b, 0) / nei.length / (nei.length - 1);
-
     }
 
-    getClusteringCoefficient() {
-        const cls = Object.keys(this.Nodes).map(node => this.getLocalClustering(node));
-        return cls.reduce((a, b) => a+b, 0)/cls.length;
-    }
-
-    getSubgraph(nodes) {
-        // todo
-    }
 }

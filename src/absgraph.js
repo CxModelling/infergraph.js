@@ -79,6 +79,18 @@ export class AbstractGraph {
         return this.Successor[source][target];
     }
 
+    isNeighbour(source, target) {
+
+    }
+
+    getNeighbourKeys(node) {
+
+    }
+
+    getNeighbours(node) {
+        return this.getNodes(this.getNeighbourKeys(node));
+    }
+
     getDegree(node) {
 
     }
@@ -92,10 +104,23 @@ export class AbstractGraph {
     }
 
     getClusteringCoefficient() {
-
+        const cls = Object.keys(this.Nodes).map(node => this.getLocalClustering(node));
+        return cls.reduce((a, b) => a+b, 0)/cls.length;
     }
 
     getSubgraph(nodes) {
 
+    }
+
+    getD3form() {
+        const js = {};
+        js.Nodes = Object.values(this.Nodes).map(n => Object.assign({}, n));
+
+        js.Edges = Object.entries(this.Successor)
+                         .map(([src, tars]) => Object.keys(tars).map(tar => [src, tar]))
+                         .reduce((a, b) => a.concat(b), [])
+                         .map(([src, tar]) => Object({source: src, target: tar}));
+
+        return js;
     }
 }

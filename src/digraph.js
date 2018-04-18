@@ -130,14 +130,9 @@ export class DiGraph extends AbstractGraph {
     }
 
     getLocalClustering(node) {
-        // todo
-    }
+        const nei = this.getParentKeys(node);
 
-    getClusteringCoefficient() {
-        // todo
-    }
-
-    getSubgraph(nodes) {
-        // todo
+        return nei.map(src => nei.filter(tar => this.isNeighbour(src, tar)).length)
+                .reduce((a, b) => a + b, 0) / nei.length / (nei.length - 1);
     }
 }
