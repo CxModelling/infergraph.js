@@ -2,5 +2,14 @@
  * Created by TimeWz667 on 17/04/2018.
  */
 
-export {Graph} from "./src/graph";
-export {DiGraph} from "./src/digraph";
+import {Graph} from "./src/graph";
+import {DiGraph} from "./src/digraph";
+
+
+export function newGraph(attr) {
+    return new Graph(attr);
+}
+
+export function newDiGraph(attr) {
+    return new DiGraph(attr);
+}

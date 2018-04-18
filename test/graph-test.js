@@ -5,7 +5,7 @@ const tape = require("tape"),
     graph = require("../build/infergraph");
 
 tape("nodes", function(test) {
-    const g1 = new graph.Graph({A: 1, B: 2});
+    const g1 = graph.newGraph({A: 1, B: 2});
 
     test.deepEquals(g1.Attributes, {A: 1, B: 2});
 
@@ -39,7 +39,7 @@ tape("nodes", function(test) {
 
 
 tape("edges", function(test) {
-    const g2 = new graph.Graph();
+    const g2 = graph.newGraph();
 
     g2.addEdge("A", "B");
     test.deepEquals(g2.Predecessor.A, {B: 0});
@@ -70,7 +70,7 @@ tape("edges", function(test) {
 
 
 tape("relations", function(test) {
-    const g3 = new graph.Graph();
+    const g3 = graph.newGraph();
 
     g3.addCycle(["S", "T", "U", "V"]);
 
@@ -84,7 +84,7 @@ tape("relations", function(test) {
 
 
 tape("clustering", function(test) {
-    const g4 = new graph.Graph();
+    const g4 = graph.newGraph();
 
     g4.addEdge("A", "B");
     g4.addEdge("A", "C");
