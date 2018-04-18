@@ -66,3 +66,33 @@ tape("edges", function(test) {
 
     test.end();
 });
+
+
+tape("relations", function(test) {
+    const g3 = new graph.Graph();
+
+    g3.addCycle(["S", "T", "U", "V"]);
+
+    test.deepEquals(g3.getNeighbours("S"), ["T", "V"]);
+    test.equal(g3.getDegree("T"), 2);
+
+    test.equal(g3.getAvgDegree(), 2);
+
+    test.end();
+});
+
+
+tape("clustering", function(test) {
+    const g4 = new graph.Graph();
+
+    g4.addEdge("A", "B");
+    g4.addEdge("A", "C");
+    g4.addCycle(["B", "C", "D", "E"]);
+
+    test.equal(g4.getLocalClustering("A"), 1);
+    test.equal(g4.getLocalClustering("B"), 1/3);
+    test.equal(g4.getLocalClustering("D"), 0);
+    test.equal(g4.getClusteringCoefficient(), 1/3);
+
+    test.end();
+});

@@ -141,4 +141,43 @@ export class Graph {
                                 .forEach(t => this.addEdge(s, t, weight)));
     }
 
+    isNeighbour(source, target) {
+        if (source in this.Nodes && target in this.Nodes) {
+            return target in this.Predecessor[source];
+        }
+        return false;
+    }
+
+    getEdgeWeight(source, target) {
+        return this.Predecessor[source][target];
+    }
+
+    getNeighbours(node) {
+        return Object.keys(this.Predecessor[node]);
+    }
+
+    getDegree(node) {
+        return this.getNeighbours(node).length;
+    }
+
+    getAvgDegree() {
+        const n = Object.keys(this.Nodes).length;
+        return Object.values(this.Predecessor)
+                     .map(nod => Object.keys(nod).length)
+                     .reduce((a, b) => a+b, 0)/n;
+
+    }
+
+    getLocalClustering(node) {
+        const nei = this.getNeighbours(node);
+
+        return nei.map(src => nei.filter(tar => this.isNeighbour(src, tar)).length)
+            .reduce((a, b) => a + b, 0) / nei.length / (nei.length - 1);
+
+    }
+
+    getClusteringCoefficient() {
+        const cls = Object.keys(this.Nodes).map(node => this.getLocalClustering(node));
+        return cls.reduce((a, b) => a+b, 0)/cls.length;
+    }
 }
