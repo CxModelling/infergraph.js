@@ -28,6 +28,10 @@ class NodeOp {
     get() {
         return this.Node;
     }
+
+    id() {
+        return this.Node.id;
+    }
 }
 
 
@@ -52,13 +56,18 @@ class NodeOpGroup {
     get() {
         return this.Nodes.map(node => node.get());
     }
+
+    id() {
+        return this.Nodes.map(node => node.id());
+    }
 }
 
 
 export class Graph {
     constructor(attr) {
         this.Nodes = {};
-        this.Adjacency = [];
+        this.Predecessor = [];
+        this.Successor = [];
         this.Attributes = Object.assign({}, attr);
     }
 
@@ -80,14 +89,24 @@ export class Graph {
 
         if (node instanceof Array) {
             name = node[0];
-            node = Object.assign({id: name}, node[1]);
+
+            if (name in this.Nodes) {
+                node = Object.assign(this.Nodes[name], node[1]);
+            } else {
+                node = Object.assign({id: name}, node[1]);
+            }
         } else if (typeof(node) === "object") {
             name = ("id" in node)? node.id: JSON.stringify(node);
         } else if (typeof(node) === "string") {
             name = node;
-            node = {id: node}
+            node = (name in this.Nodes)? this.Nodes[name]: {id: node};
         } else {
             return;
+        }
+
+        if (!(name in this.Nodes)) {
+            this.Predecessor[name] = {};
+            this.Successor[name] = {};
         }
 
         this.Nodes[name] = node;
@@ -97,4 +116,29 @@ export class Graph {
     getNode(node) {
         return this.Nodes[node];
     }
+
+    addEdge(source, target, weight) {
+        let src = this.addNode(source).attr("id");
+        let tar = this.addNode(target).attr("id");
+        weight = weight || 0;
+        this.Successor[src][tar] = weight;
+        this.Successor[tar][src] = weight;
+        this.Predecessor[src][tar] = weight;
+        this.Predecessor[tar][src] = weight;
+    }
+
+    addCycle(nodes, weight) {
+        const len = nodes.length;
+
+        for (let i = 1; i < len; i++) {
+            this.addEdge(nodes[i-1], nodes[i], weight);
+        }
+        this.addEdge(nodes[0], nodes[len-1], weight);
+    }
+
+    linkCompletely(nodes, weight) {
+        nodes.forEach(s => nodes.filter(t => t !== s)
+                                .forEach(t => this.addEdge(s, t, weight)));
+    }
+
 }
