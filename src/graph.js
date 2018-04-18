@@ -56,12 +56,20 @@ export class Graph {
     }
 
     getNode(node) {
-        return this.Nodes[node];
+        return new NodeOp(this.Nodes[node]);
+    }
+
+    getNodes(nodes) {
+        if (typeof(nodes) === "function") {
+            return new NodeOpGroup(Object.values(this.Nodes).filter(nodes));
+        } else {
+            return new NodeOpGroup(nodes.map(nod => this.Nodes[nod]));
+        }
     }
 
     addEdge(source, target, weight) {
-        let src = this.addNode(source).attr("id");
-        let tar = this.addNode(target).attr("id");
+        let src = this.addNode(source).id;
+        let tar = this.addNode(target).id;
         weight = weight || 0;
         this.Successor[src][tar] = weight;
         this.Successor[tar][src] = weight;
@@ -94,12 +102,16 @@ export class Graph {
         return this.Predecessor[source][target];
     }
 
-    getNeighbours(node) {
+    getNeighbourKeys(node) {
         return Object.keys(this.Predecessor[node]);
     }
 
+    getNeighbours(node) {
+        return this.getNodes(this.getNeighbourKeys(node));
+    }
+
     getDegree(node) {
-        return this.getNeighbours(node).length;
+        return this.getNeighbourKeys(node).length;
     }
 
     getAvgDegree() {
@@ -111,7 +123,7 @@ export class Graph {
     }
 
     getLocalClustering(node) {
-        const nei = this.getNeighbours(node);
+        const nei = this.getNeighbourKeys(node);
 
         return nei.map(src => nei.filter(tar => this.isNeighbour(src, tar)).length)
             .reduce((a, b) => a + b, 0) / nei.length / (nei.length - 1);

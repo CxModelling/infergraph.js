@@ -12,6 +12,7 @@ tape("nodes", function(test) {
     const n1 = g1.addNode("X");
     test.deepEquals(n1.get(), {id: "X"});
     test.equal(n1.attr("id"), "X");
+    test.equal(n1.id, "X");
 
     const n2s = g1.addNodes(["Y", "Z"]);
     test.deepEquals(n2s.get(), [{id: "Y"}, {id: "Z"}]);
@@ -31,7 +32,7 @@ tape("nodes", function(test) {
     const n4s = g1.addNodes({U: {a: 2}, V: {a: 3}});
     test.deepEquals(n4s.get(), [{id: "U", a: 2}, {id: "V", a: 3}]);
 
-    test.deepEquals(g1.getNode("X"), {"id": "X"});
+    test.deepEquals(g1.getNode("X").get(), {"id": "X"});
 
     test.end();
 });
@@ -73,7 +74,7 @@ tape("relations", function(test) {
 
     g3.addCycle(["S", "T", "U", "V"]);
 
-    test.deepEquals(g3.getNeighbours("S"), ["T", "V"]);
+    test.deepEquals(g3.getNeighbourKeys("S"), ["T", "V"]);
     test.equal(g3.getDegree("T"), 2);
 
     test.equal(g3.getAvgDegree(), 2);

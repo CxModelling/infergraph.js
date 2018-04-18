@@ -30,7 +30,7 @@ export class NodeOp {
         return this.Node;
     }
 
-    id() {
+    get id() {
         return this.Node.id;
     }
 }
@@ -58,8 +58,8 @@ export class NodeOpGroup {
         return this.Nodes.map(node => node.get());
     }
 
-    id() {
-        return this.Nodes.map(node => node.id());
+    get id() {
+        return this.Nodes.map(node => node.id);
     }
 }
 
