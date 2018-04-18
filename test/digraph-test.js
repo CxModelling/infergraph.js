@@ -81,7 +81,7 @@ tape("relations", function(test) {
     test.ok(g3.isDescendant("C", "D"));
     test.notOk(g3.isDescendant("B", "C"));
 
-
+    test.deepEquals(g3.getOrder(), ["A", "B", "D", "E", "C"]);
     test.end();
 });
 

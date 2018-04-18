@@ -135,4 +135,22 @@ export class DiGraph extends AbstractGraph {
         return nei.map(src => nei.filter(tar => this.isNeighbour(src, tar)).length)
                 .reduce((a, b) => a + b, 0) / nei.length / (nei.length - 1);
     }
+
+    getOrder() {
+        let order = [],
+            waiting = Object.keys(this.Nodes),
+            querying = [];
+
+
+        while(waiting.length > 0) {
+            querying = waiting.filter(e => this.getParentKeys(e).every(pa => order.indexOf(pa) >= 0));
+            if (querying.length === 0) {
+                return order; // the rest can't be sorted
+            }
+            order = order.concat(querying);
+            waiting = waiting.filter(d => !querying.includes(d));
+        }
+        return order;
+    }
+
 }
